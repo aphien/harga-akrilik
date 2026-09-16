@@ -35,7 +35,7 @@ Ikuti instruksi berikut untuk menjalankan program ini di komputer lokal Anda.
 ### 2. Kloning Repository
 ```bash
 git clone https://github.com/aphien/harga-akrilik.git
-cd manajemen-harga-akrilik
+cd harga-akrilik
 ```
 
 ### 3. Install Dependensi (Library)
@@ -55,7 +55,44 @@ npm install
 ```bash
 npm run dev
 ```
-Aplikasi bisa langsung dibuka pada *browser* favorit Anda (biasanya tersedia pada [http://localhost:5173/](http://localhost:5173/)).
+Aplikasi bisa langsung dibuka pada *browser* Anda (default port: [http://localhost:3000/](http://localhost:3000/)).
+
+---
+
+## 📱 Tampilan Mobile & Fitur Unggulan
+
+Aplikasi telah dioptimalkan khusus untuk kenyamanan perangkat *smartphone* / *tablet*:
+- **Floating Action Button (FAB):** Tombol bulat "+ Tambah Data" melayang di kanan bawah layar untuk penambahan data cepat dengan satu jempol.
+- **Toggle Mode Tampilan Mobile:** Pilihan antara **Mode Kartu (Card)** yang elegan atau **Tabel Geser (Scrollable Compact Table)** dengan kolom ketebalan terkunci (*sticky*).
+- **Kalkulator Mobile & Salin Rincian:** Input numerik ramah sentuhan serta tombol **Salin Rincian** ke *clipboard* untuk langsung ditempel ke chat WhatsApp pelanggan.
+- **Filter Ketebalan pada Perbandingan Harga:** *Carousel pill* pemilih ketebalan ("Semua", "2 mm", "3 mm", dll.) untuk membandingkan harga antar supplier tanpa perlu scrolling panjang.
+- **Modal Adaptif (Bottom Sheet):** Formulir modal otomatis beradaptasi menjadi *bottom sheet drawer* di layar kecil agar nyaman digunakan bersama keyboard virtual.
+
+---
+
+## ⏰ Otomatisasi Keep-Alive Supabase (Mencegah Database Down/Pause)
+
+Supabase Free Tier otomatis terhibernasi (*paused*) jika tidak ada request API selama 7 hari. Proyek ini dilengkapi dengan 2 sistem otomatisasi:
+
+### 1. Cloud Cron (GitHub Actions) — *Otomatis 24/7 di Cloud*
+File alur kerja telah disediakan di `.github/workflows/supabase-keep-alive.yml`. Setiap kali repositori ini di-*push* ke GitHub:
+- GitHub Actions akan otomatis melakukan ping database setiap 6 jam (`0 */6 * * *`).
+- Berjalan gratis di cloud tanpa membutuhkan komputer/laptop Anda menyala.
+
+### 2. Script Lokal & Server Daemon
+Anda juga dapat menjalankan ping secara lokal atau pada VPS/server hosting:
+```bash
+# Ping sekali langsung (one-shot):
+npm run keep-alive
+
+# Jalankan sebagai daemon latar belakang (otomatis berulang setiap 6 jam):
+npm run keep-alive:daemon
+
+# Atau jadwalkan via crontab (Linux/macOS):
+crontab -e
+# Tambahkan baris ini (misal berjalan setiap hari pukul 08:00):
+0 8 * * * cd /path/ke/harga-akrilik && npm run keep-alive >> /tmp/keep-alive.log 2>&1
+```
 
 ---
 
